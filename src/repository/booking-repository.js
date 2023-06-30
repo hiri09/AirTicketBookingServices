@@ -17,6 +17,8 @@ class BookingRepository{
             StatusCodes.INTERNAL_SERVER_ERROR);
         }
     }
+
+    
 }
 
 module.exports = BookingRepository;
