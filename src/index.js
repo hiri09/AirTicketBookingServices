@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const apiRoutes = require('./routes/index');
 const app = express();
 const db = require('./models/index');
-const {PORT} = require('./config/serverConfig');
+const {PORT , FLIGHT_SERVICE_PATH , DB_SYNC} = require('./config/serverConfig');
 const setupAndeStartServer = ()=>{
     
     app.use(bodyParser.json());
@@ -17,6 +17,7 @@ const setupAndeStartServer = ()=>{
         if(process.env.DB_SYNC){
             db.sequelize.sync({alter : true});
         }        
+        //console.log(typeof FLIGHT_SERVICE_PATH);
     })
 }
 
