@@ -12,9 +12,17 @@ class BookingController{
     
     async sendMessageToQueue(req , res){
         const channel = await createChannel();
-        const data = {message : 'Success'};
+        const payload = {
+            data : {
+                subject : 'This is noti from queue',
+                content : 'Some will subscribe this',
+                recepientEmail : 'hk8810254@gmail.com',
+                notificationTime : '2023-07-02T19:22:37'
+            },
+            service : 'CREATE_TICKET'
+        };
 
-        publishMessage(channel , REMINDER_BINDING_KEY , JSON.stringify(data));
+        publishMessage(channel , REMINDER_BINDING_KEY , JSON.stringify(payload));
         return res.status(StatusCodes.OK).json({
             message: 'Successfully Published message',
             
@@ -22,9 +30,9 @@ class BookingController{
     }
     async create(req, res){
         try {
-            console.log(typeof req.body.flightId);
+            //console.log(typeof req.body.flightId);
             const response = await bookingService.createBooking(req.body);
-            console.log("FROM BOOKING CONTROLLER", response);
+            //console.log("FROM BOOKING CONTROLLER", response);
             return res.status(StatusCodes.OK).json({
                 message: 'Successfully completed booking',
                 success: true,
@@ -32,6 +40,58 @@ class BookingController{
                 data: response
             })
         } catch (error) {
+            console.log("this is the error" , error.message);
+            return res.status(error.statusCode).json({
+                message: error.message,
+                success: false,
+                err: error.explanation,
+                data: {}
+            });
+        }
+    }
+
+    async update(req,res){
+        try{
+            const data = {
+                flightId :req.body.flightId,
+                noOfSeats : req.body.noOfSeats,
+                userId : req.body.userId
+            };
+
+            const response = await bookingService.updateBooking(req.params.id , data);
+
+            return res.status(StatusCodes.OK).json({
+                message: 'Successfully updated the  booking',
+                success: true,
+                err: {},
+                data: response
+            })
+        }
+        catch(error){
+            console.log('controller fault' , error);
+            return res.status(error.statusCode).json({
+                message: error.message,
+                success: false,
+                err: error.explanation,
+                data: {}
+            });
+        }
+    }
+
+    async cancelBooking(req , res){
+        try{
+            console.log("request id is" , req.params.id);
+            const response = await bookingService.cancel(req.params.id);
+            console.log("request id is" , req.params.id);
+            return res.status(StatusCodes.OK).json({
+                message: 'Successfully cancelled the  booking',
+                success: true,
+                err: {},
+                data: response
+            })
+        }
+        catch{
+            console.log('controller fault not able to cancel' , error);
             return res.status(error.statusCode).json({
                 message: error.message,
                 success: false,
