@@ -12,7 +12,7 @@ router.get('/info' , (req , res)=>{
 })
 
 router.post('/bookings' ,bookingController.create);
-router.patch('/bookings/:id' , BookingMiddlewares.validateUpdateBooking , bookingController.update);
+
 router.patch('/Cancelbookings/:id' , bookingController.cancelBooking);
 
 router.post('/publish' , bookingController.sendMessageToQueue);

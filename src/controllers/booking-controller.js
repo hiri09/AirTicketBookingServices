@@ -7,15 +7,13 @@ const bookingService = new BookingService();
 const {REMINDER_BINDING_KEY} = require('../config/serverConfig');
 const {createChannel , publishMessage} = require('../utils/messageQueue');
 class BookingController{
-    
-
-    
+        
     async sendMessageToQueue(req , res){
         const channel = await createChannel();
         const payload = {
             data : {
                 subject : 'This is noti from queue',
-                content : 'Some will subscribe this',
+                content : 'todays msg are from here ',
                 recepientEmail : 'hk8810254@gmail.com',
                 notificationTime : '2023-07-02T19:22:37'
             },
@@ -50,34 +48,7 @@ class BookingController{
         }
     }
 
-    async update(req,res){
-        try{
-            const data = {
-                flightId :req.body.flightId,
-                noOfSeats : req.body.noOfSeats,
-                userId : req.body.userId
-            };
-
-            const response = await bookingService.updateBooking(req.params.id , data);
-
-            return res.status(StatusCodes.OK).json({
-                message: 'Successfully updated the  booking',
-                success: true,
-                err: {},
-                data: response
-            })
-        }
-        catch(error){
-            console.log('controller fault' , error);
-            return res.status(error.statusCode).json({
-                message: error.message,
-                success: false,
-                err: error.explanation,
-                data: {}
-            });
-        }
-    }
-
+    
     async cancelBooking(req , res){
         try{
             console.log("request id is" , req.params.id);

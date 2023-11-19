@@ -24,9 +24,6 @@ class BookingRepository{
             console.log("repo working");
             if(data.status){
                 booking.status = data.status;
-                booking.flightId = data.flightId;
-                booking.noOfSeats = data.noOfSeats;
-                booking.totalCost = data.totalCost
             }
             await booking.save();
             return booking;
