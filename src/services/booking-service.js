@@ -38,17 +38,31 @@ class BookingService {
             const channel = await createChannel();
             const payload = {
                 data: {
-                    subject: 'This is noti from service booking ',
-                    content: 'booking to notification ',
+                    subject: 'Succesfully booked the flight ',
+                    content: 'thanks for booking the flights hope you liked our service',
                     recepientEmail: 'hk8810254@gmail.com',
                     notificationTime: new Date()  // Corrected: Add parentheses to invoke the Date constructor
                 },
                 service: 'CREATE_TICKET'
             };
             
-    
             publishMessage(channel , REMINDER_BINDING_KEY , JSON.stringify(payload));
 
+
+            const departure_time = new Date(flightData.departureTime);
+            // Subtract one day from the departure time
+            departure_time.setDate(departure_time.getDate() - 1);
+            const Reminder_Payload = {
+                data: {
+                    subject: 'Reminder for your flight ',
+                    content: `your flight is in next 24 hours and your flight number is ${flightData.flightNumber}`,
+                    recepientEmail: 'hk8810254@gmail.com',
+                    notificationTime: departure_time  // Corrected: Add parentheses to invoke the Date constructor
+                },
+                service: 'CREATE_TICKET'
+            };
+
+            publishMessage(channel , REMINDER_BINDING_KEY , JSON.stringify(Reminder_Payload));
             return finalBooking;
             
         } catch (error) {
@@ -74,6 +88,18 @@ class BookingService {
 
             await axios.patch(getFlightRequestURL , {tottalSeats : add_seats});
             
+
+            const channel = await createChannel();
+            const payload = {
+                data: {
+                    subject: 'Succesfully cancelled the flight ',
+                    content: 'your booking have been succefully cancelled',
+                    recepientEmail: 'hk8810254@gmail.com',
+                    notificationTime: new Date()  // Corrected: Add parentheses to invoke the Date constructor
+                },
+                service: 'CREATE_TICKET'
+            };
+            publishMessage(channel , REMINDER_BINDING_KEY , JSON.stringify(payload));
             const finalBooking = await this.bookingRepository.cancelTheBooking(bookingId , {status : 'Cancelled'});
             return finalBooking;
         }
