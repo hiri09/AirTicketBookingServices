@@ -9,7 +9,7 @@ class BookingService {
     constructor(){
         this.bookingRepository = new BookingRepository();
     }
-    // here data would be flightid and userid and noofseats
+    // here data would be flightid and userid and noofseats and accesstoken
     async createBooking(data){
         try {
             const flightId = data.flightId;
